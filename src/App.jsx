@@ -8,6 +8,7 @@ import WriteABlog from "./components/WriteABlog.jsx";
 import Home from "./components/Home.jsx";
 import BlogCard from "./components/BlogCard.jsx";
 import BlogProvider from "./utils/BlogProvider.jsx";
+import EditBlog from "./components/EditBlog.jsx";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/my-blogs" element={<MyBlogs />} />
                 <Route path="/write-a-blog" element={<WriteABlog />} />
                 <Route path="/blog" element={<BlogCard />} />
+                <Route path="/edit-blog" element={<EditBlog />} />
               </Route>
             </Routes>
           </BrowserRouter>
