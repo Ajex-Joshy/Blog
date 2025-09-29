@@ -1,12 +1,16 @@
-import React, { use, useRef, useState } from "react";
-import { Button } from "@mui/material";
+import React, { use, useContext, useEffect, useRef, useState } from "react";
 import validateSignData from "../utils/validation";
 import { auth } from "../config/firebase";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
+import { userContext } from "../utils/UserProvider.jsx";
+import { useNavigate } from "react-router-dom";
+import { PROFILE_PHOTO } from "../utils/constants.js";
 
 const Sign = () => {
   const firstName = useRef("");
@@ -16,6 +20,14 @@ const Sign = () => {
   const confirmPassword = useRef("");
   const [error, setError] = useState("");
   const [isSignIn, setIsSignIn] = useState(false);
+  const provider = new GoogleAuthProvider();
+  auth.languageCode = "it";
+  const { user, dispatch } = useContext(userContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) navigate("/home");
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,8 +50,9 @@ const Sign = () => {
         );
         await updateProfile(userCredential.user, {
           displayName: `${data.firstName} ${data.lastName}`,
+          photoURL: PROFILE_PHOTO,
         });
-        console.log(userCredential.user);
+        navigate("/");
       } else {
         const userCredential = await signInWithEmailAndPassword(
           auth,
@@ -48,16 +61,44 @@ const Sign = () => {
         );
 
         const user = userCredential.user;
-        console.log(user);
+        dispatch({
+          type: "addUser",
+          payload: {
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+          },
+        });
+        navigate("/home");
       }
     } catch (err) {
       console.log(err);
       setError(err.message);
     }
   };
+
+  const handleGoogleSign = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      dispatch({
+        type: "addUser",
+        payload: {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        },
+      });
+      navigate("/home");
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
   return (
     <div>
-      <div className="w-10/12 md:w-6/12 lg:w-/12 bg-blue-500 mx-auto rounded-2xl text-white m-4 p-4 mt-[20%] md:mt-[10%]">
+      <div className="w-10/12 md:w-6/12 lg:w-4/12 bg-blue-500 mx-auto rounded-2xl text-white m-4 p-4 mt-[20%] md:mt-[10%]">
         <h1 className="font-bold text-center text-2xl p-3">Sign Up</h1>
         <form
           action=""
@@ -127,7 +168,10 @@ const Sign = () => {
       </div>
       <h1 className="text-center">OR</h1>
       <div className="flex justify-center m-4">
-        <button className="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 cursor-pointer">
+        <button
+          className="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 cursor-pointer"
+          onClick={handleGoogleSign}
+        >
           <img
             className="w-6 h-6"
             src="https://www.svgrepo.com/show/475656/google-color.svg"
