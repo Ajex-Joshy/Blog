@@ -11,7 +11,8 @@ const MyBlogs = () => {
   const myBlogsList = blogs.filter((b) => {
     return b.uid === user.uid;
   });
-  if (myBlogsList.length === 0) return <div>You dont writtem any blogs</div>;
+  if (myBlogsList.length === 0)
+    return <div className="font-bold m-auto">You dont writtem any blogs</div>;
   return (
     <div>
       {myBlogsList.map((b) => (

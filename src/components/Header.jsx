@@ -3,6 +3,7 @@ import { signOut } from "firebase/auth";
 import { userContext } from "../utils/UserProvider";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../config/firebase";
+import { PROFILE_PHOTO } from "../utils/constants";
 
 const Header = () => {
   const { user, dispatch } = useContext(userContext);
@@ -12,7 +13,7 @@ const Header = () => {
     try {
       await signOut(auth);
       dispatch({ type: "removeUser" });
-      navigate("/sign");
+      navigate("/sign", { replace: true });
     } catch (err) {
       console.log(err.message);
     }
@@ -24,7 +25,7 @@ const Header = () => {
   return (
     <div className="bg-black text-white flex justify-between items-center p-3 px-12">
       <div>
-        <Link to="/" className="text-2xl font-bold">
+        <Link to="/home" className="text-2xl font-bold">
           BLOG.
         </Link>
       </div>
@@ -57,7 +58,7 @@ const Header = () => {
         <div>
           <img
             className="w-10 h-10 rounded-full object-cover"
-            src={user.photoURL}
+            src={user.photoUR || PROFILE_PHOTO}
             alt="User Avatar"
           />
         </div>

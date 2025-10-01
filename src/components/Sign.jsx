@@ -2,13 +2,12 @@ import React, { use, useContext, useEffect, useRef, useState } from "react";
 import validateSignData from "../utils/validation";
 import { auth } from "../config/firebase";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-
+import { userContext } from "../utils/UserProvider.jsx";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { userContext } from "../utils/UserProvider.jsx";
 import { useNavigate } from "react-router-dom";
 import { PROFILE_PHOTO } from "../utils/constants.js";
 
@@ -52,7 +51,7 @@ const Sign = () => {
           displayName: `${data.firstName} ${data.lastName}`,
           photoURL: PROFILE_PHOTO,
         });
-        navigate("/");
+        navigate("/home");
       } else {
         const userCredential = await signInWithEmailAndPassword(
           auth,
@@ -163,7 +162,7 @@ const Sign = () => {
           onClick={() => setIsSignIn(!isSignIn)}
           className="pt-3 cursor-pointer"
         >
-          {isSignIn ? "Aready a user? SignIn" : "New to MOOKAmbika? SignUp now"}
+          {isSignIn ? "Aready a user? SignIn" : "New to BLOG.? SignUp now"}
         </p>
       </div>
       <h1 className="text-center">OR</h1>

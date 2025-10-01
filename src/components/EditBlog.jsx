@@ -12,7 +12,6 @@ const EditBlog = () => {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -37,7 +36,6 @@ const EditBlog = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    setLoading(true);
     try {
       const docRef = doc(db, "blogs", blogId);
       await updateDoc(docRef, {
@@ -48,34 +46,31 @@ const EditBlog = () => {
       navigate("/my-blogs");
     } catch (error) {
       toast.error("Failed to update blog");
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Edit Blog</h2>
-      <form onSubmit={handleUpdate} className="flex flex-col gap-4">
+    <div className="p-10">
+      <h1 className="text-2xl text-center font-bold">Edit your Blog</h1>
+      <form className="flex flex-col gap-4 mt-4" onSubmit={handleUpdate}>
         <input
           type="text"
-          placeholder="Title"
+          placeholder="Blog Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="border p-2 rounded"
+          className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
         />
         <textarea
-          placeholder="Content"
+          placeholder="Write your blog content here..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="border p-2 rounded h-64"
+          className="border border-gray-300 rounded px-3 py-2 h-100 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
         />
         <button
           type="submit"
-          className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 disabled:bg-gray-400"
-          disabled={loading}
+          className="w-40 mx-auto bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700 transition cursor-pointer"
         >
           Update Blog
         </button>

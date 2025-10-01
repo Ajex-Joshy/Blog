@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
 import Swal from "sweetalert2";
+import { PROFILE_PHOTO } from "../utils/constants";
 
 const BlogTitleCard = React.memo(
   ({ blog: { id, title, photoURL, displayName }, myBlog }) => {
@@ -22,7 +23,6 @@ const BlogTitleCard = React.memo(
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!",
       });
-
       if (result.isConfirmed) {
         try {
           await deleteDoc(doc(db, "blogs", id));
@@ -31,7 +31,7 @@ const BlogTitleCard = React.memo(
         }
       }
     };
-
+    console.log(photoURL);
     return (
       <div
         className="w-8/12 bg-amber-200 mx-auto m-4 p-4 rounded-lg cursor-pointer"
@@ -40,6 +40,7 @@ const BlogTitleCard = React.memo(
         <div className="flex justify-between items-center">
           <div className="flex">
             <img className="w-8 rounded-full" src={photoURL} alt="" />
+
             <p className="m-2 my-auto">{displayName}</p>
           </div>
           {myBlog && (

@@ -42,11 +42,13 @@ const WriteABlog = () => {
           placeholder="Blog Title"
           className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           ref={titleRef}
+          required
         />
         <textarea
           placeholder="Write your blog content here..."
-          className="border border-gray-300 rounded px-3 py-2 h-40 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-gray-300 rounded px-3 py-2 h-100 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
           ref={contentRef}
+          required
         />
         <button
           type="submit"

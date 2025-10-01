@@ -9,6 +9,7 @@ import Home from "./components/Home.jsx";
 import BlogCard from "./components/BlogCard.jsx";
 import BlogProvider from "./utils/BlogProvider.jsx";
 import EditBlog from "./components/EditBlog.jsx";
+import Error from "./components/Error.jsx";
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
         <BlogProvider>
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Body />}>
+              <Route path="/" element={<Body />} errorElement={<Error />}>
                 <Route path="/sign" element={<Sign />} />
                 <Route path="/Home" element={<Home />} />
                 <Route path="/my-blogs" element={<MyBlogs />} />

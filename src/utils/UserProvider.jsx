@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebase";
-import { useNavigate } from "react-router-dom";
 
 export const userContext = createContext();
 
@@ -23,9 +22,8 @@ const UserProvider = ({ children }) => {
     }
   };
   const [userInfo, dispatch] = useReducer(reducer, null);
-  const [loading, setLoading] = useState(true); // ✅ add loading state
+  const [loading, setLoading] = useState(true);
 
-  // add user when page is refreshed
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {

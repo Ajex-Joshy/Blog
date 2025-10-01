@@ -1,19 +1,41 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo, useState, useEffect } from "react";
 import { blogContext } from "../utils/BlogProvider";
 import { useLocation } from "react-router-dom";
+import { PROFILE_PHOTO } from "../utils/constants";
+import { toast } from "react-hot-toast";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../config/firebase";
 
 const BlogCard = () => {
   const location = useLocation();
-  const blogs = useContext(blogContext);
-  if (!blogs) return <div>Loading...</div>;
   const { blogId } = location.state || {};
-  const blog = blogs.find((b) => b.id === blogId);
+  const [blog, setBlog] = useState();
 
-  if (!blogs) return <div>Loading</div>;
-  const { id, title, photoURL, displayName, content, createdAt } = blog;
+  useEffect(() => {
+    const fetchBlog = async () => {
+      try {
+        const docRef = doc(db, "blogs", blogId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setBlog(data);
+        } else {
+          toast.error("Blog not found");
+        }
+      } catch (error) {
+        toast.error("Failed to fetch blog");
+      }
+    };
+    if (blogId) {
+      fetchBlog();
+    }
+  }, [blogId]);
+  if (!blog) return <div>loading..</div>;
+  const { title, photoURL, displayName, content, createdAt } = blog;
   const PublishedOn = createdAt?.toDate
     ? createdAt.toDate()
     : new Date(createdAt.seconds * 1000);
+
   return (
     <div className="w-10/12 mx-auto bg-gray-200 rounded-lg shadow-md overflow-hidden p-6 m-4">
       <div className="grid-cols-12 justify-between">
@@ -22,7 +44,10 @@ const BlogCard = () => {
         </div>
         <div className="flex col-span-3">
           <p className="text-sm text-gray-500 my-auto">By {displayName}</p>
-          <img src={photoURL} alt={title} className="w-8 rounded-full m-2" />
+          <img
+            src={photoURL || PROFILE_PHOTO}
+            className="w-8 rounded-full m-2"
+          />
         </div>
       </div>
 
